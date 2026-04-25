@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help The Children | Photo Gallery</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">❤️ HelpTheChildren</div>
+            <div class="menu-toggle" id="menuToggle">☰</div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="gallery.html" class="active">Gallery</a></li>
+                <li><a href="donate.html">Donate</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="donate.html" class="donate-btn">Donate Now</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="page-header">
+        <h1>Our Impact in Photos</h1>
+        <p>See the difference your support makes in children's lives around the world</p>
+    </section>
+
+    <section class="gallery-section">
+        <div class="gallery-filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="education">Education</button>
+            <button class="filter-btn" data-filter="health">Health</button>
+            <button class="filter-btn" data-filter="emergency">Emergency</button>
+        </div>
+
+        <div class="gallery-grid" id="galleryGrid">
+            <div class="gallery-item" data-category="education">
+                <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400" alt="Children in classroom">
+                <div class="gallery-overlay">
+                    <h3>Education for All</h3>
+                    <p>Children learning in a safe classroom environment</p>
+                </div>
+            </div>
+            <div class="gallery-item" data-category="health">
+                <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=400" alt="Medical care">
+                <div class="gallery-overlay">
+                    <h3>Healthcare Access</h3>
+                    <p>Providing essential medical supplies to communities</p>
+                </div>
+            </div>
+            <div class="gallery-item" data-category="emergency">
+                <img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?w=400" alt="Emergency relief">
+                <div class="gallery-overlay">
+                    <h3>Emergency Response</h3>
+                    <p>Delivering food and shelter after disasters</p>
+                </div>
+            </div>
+            <div class="gallery-item" data-category="education">
+                <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=400" alt="School supplies">
+                <div class="gallery-overlay">
+                    <h3>School Supplies</h3>
+                    <p>Distributing books and learning materials</p>
+                </div>
+            </div>
+            <div class="gallery-item" data-category="health">
+                <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=400" alt="Nutrition program">
+                <div class="gallery-overlay">
+                    <h3>Nutrition Programs</h3>
+                    <p>Fighting malnutrition with healthy meals</p>
+                </div>
+            </div>
+            <div class="gallery-item" data-category="emergency">
+                <img src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=400" alt="Shelter construction">
+                <div class="gallery-overlay">
+                    <h3>Building Hope</h3>
+                    <p>Reconstructing homes after natural disasters</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="lightbox">
+        <span class="close">&times;</span>
+        <img class="lightbox-content" id="lightboxImg">
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>HelpTheChildren</h3>
+                <p>We're a leading charity organization fighting for children's rights and wellbeing worldwide.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="about.html">Our Mission</a></li>
+                    <li><a href="#">Financial Reports</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Get Involved</h3>
+                <ul>
+                    <li><a href="donate.html">Donate</a></li>
+                    <li><a href="#">Fundraise</a></li>
+                    <li><a href="#">Volunteer</a></li>
+                    <li><a href="#">Partner with us</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 HelpTheChildren. All rights reserved. | Privacy Policy | Terms of Use</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
