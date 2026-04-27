@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Confirmation</title>
+    <style>
+        body { font-family: system-ui; background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+        .card { background:white; border-radius:20px; padding:40px; text-align:center; max-width:500px; }
+        .checkmark { width:80px; height:80px; background:#4CAF50; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; }
+        h1 { color:#2c3e4e; }
+        .details { background:#f9f9f9; border-radius:15px; padding:20px; margin:25px 0; text-align:left; }
+        .btn { display:inline-block; background:#e74c3c; color:white; text-decoration:none; padding:12px 24px; border-radius:50px; margin-top:20px; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="checkmark">✓</div>
+    <h1>Thank You!</h1>
+    <p>Your donation has been successfully processed.</p>
+    <div class="details">
+        <p><strong>Donor:</strong> <span id="donorName"></span></p>
+        <p><strong>Amount:</strong> <span id="amount"></span></p>
+        <p><strong>Email:</strong> <span id="email"></span></p>
+        <p><strong>Transaction ID:</strong> <span id="txnId"></span></p>
+    </div>
+    <a href="/" class="btn">Return to Home</a>
+</div>
+<script>
+    document.getElementById('donorName').innerText = sessionStorage.getItem('donorName') || 'Anonymous';
+    document.getElementById('amount').innerText = '$' + (sessionStorage.getItem('donationAmount') || '0');
+    document.getElementById('email').innerText = sessionStorage.getItem('donationEmail') || '—';
+    document.getElementById('txnId').innerText = sessionStorage.getItem('donationId') || 'N/A';
+    sessionStorage.clear();
+</script>
+</body>
+</html>

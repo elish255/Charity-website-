@@ -5,6 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Help The Children | Donate</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.85rem;
+            margin-top: -0.5rem;
+            margin-bottom: 0.5rem;
+            display: none;
+        }
+        .processing {
+            text-align: center;
+            margin-top: 1rem;
+            color: #e74c3c;
+            font-weight: bold;
+            display: none;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -42,6 +62,7 @@
                         <div class="custom-amount">
                             <label for="customAmount">Other Amount ($)</label>
                             <input type="number" id="customAmount" name="customAmount" min="1" step="1">
+                            <div class="error-message" id="amountError">Please select or enter a valid amount.</div>
                         </div>
                     </div>
 
@@ -81,16 +102,19 @@
                     <div class="form-group">
                         <label for="cardNumber">Credit Card Number *</label>
                         <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" required>
+                        <div class="error-message" id="cardError">Invalid card number (should be 16 digits).</div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
                             <label for="expiry">Expiry Date *</label>
                             <input type="text" id="expiry" name="expiry" placeholder="MM/YY" required>
+                            <div class="error-message" id="expiryError">Invalid or expired date.</div>
                         </div>
                         <div class="form-group">
                             <label for="cvv">CVV *</label>
                             <input type="text" id="cvv" name="cvv" placeholder="123" required>
+                            <div class="error-message" id="cvvError">CVV must be 3-4 digits.</div>
                         </div>
                     </div>
 
@@ -113,6 +137,7 @@
 
                     <button type="submit" class="submit-donation">Complete Donation</button>
                     <p class="secure-note">🔒 Your donation is secure and encrypted</p>
+                    <div class="processing" id="processingMsg">⏳ Processing your donation... Please do not close this page.</div>
                 </form>
             </div>
 
@@ -120,21 +145,11 @@
                 <div class="info-card">
                     <h3>Where your money goes</h3>
                     <div class="impact-breakdown">
-                        <div class="breakdown-item">
-                            <span>Programs & Services</span>
-                            <span>85%</span>
-                        </div>
-                        <div class="breakdown-item">
-                            <span>Fundraising</span>
-                            <span>10%</span>
-                        </div>
-                        <div class="breakdown-item">
-                            <span>Administration</span>
-                            <span>5%</span>
-                        </div>
+                        <div class="breakdown-item"><span>Programs & Services</span><span>85%</span></div>
+                        <div class="breakdown-item"><span>Fundraising</span><span>10%</span></div>
+                        <div class="breakdown-item"><span>Administration</span><span>5%</span></div>
                     </div>
                 </div>
-
                 <div class="info-card">
                     <h3>Impact of $50</h3>
                     <ul>
@@ -143,7 +158,6 @@
                         <li>✓ Feeds a family for 2 weeks</li>
                     </ul>
                 </div>
-
                 <div class="info-card">
                     <h3>Monthly Giving</h3>
                     <p>Become a monthly donor and provide sustainable support to children year-round. You can cancel anytime.</p>
@@ -154,34 +168,155 @@
 
     <footer>
         <div class="footer-content">
-            <div class="footer-section">
-                <h3>HelpTheChildren</h3>
-                <p>We're a leading charity organization fighting for children's rights and wellbeing worldwide.</p>
-            </div>
-            <div class="footer-section">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="about.html">Our Mission</a></li>
-                    <li><a href="#">Financial Reports</a></li>
-                    <li><a href="#">Careers</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Get Involved</h3>
-                <ul>
-                    <li><a href="donate.html">Donate</a></li>
-                    <li><a href="#">Fundraise</a></li>
-                    <li><a href="#">Volunteer</a></li>
-                    <li><a href="#">Partner with us</a></li>
-                </ul>
-            </div>
+            <div class="footer-section"><h3>HelpTheChildren</h3><p>We're a leading charity organization fighting for children's rights and wellbeing worldwide.</p></div>
+            <div class="footer-section"><h3>Quick Links</h3><ul><li><a href="about.html">Our Mission</a></li><li><a href="#">Financial Reports</a></li><li><a href="#">Careers</a></li><li><a href="#">Contact</a></li></ul></div>
+            <div class="footer-section"><h3>Get Involved</h3><ul><li><a href="donate.html">Donate</a></li><li><a href="#">Fundraise</a></li><li><a href="#">Volunteer</a></li><li><a href="#">Partner with us</a></li></ul></div>
         </div>
-        <div class="copyright">
-            <p>&copy; 2025 HelpTheChildren. All rights reserved. | Privacy Policy | Terms of Use</p>
-        </div>
+        <div class="copyright"><p>&copy; 2025 HelpTheChildren. All rights reserved. | Privacy Policy | Terms of Use</p></div>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        // Amount selection
+        let selectedAmount = null;
+        const amountBtns = document.querySelectorAll('.amount-btn');
+        const customAmount = document.getElementById('customAmount');
+        amountBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                amountBtns.forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                selectedAmount = btn.getAttribute('data-amount');
+                customAmount.value = '';
+                document.getElementById('amountError').style.display = 'none';
+            });
+        });
+        customAmount.addEventListener('input', () => {
+            amountBtns.forEach(b => b.classList.remove('selected'));
+            selectedAmount = null;
+            document.getElementById('amountError').style.display = 'none';
+        });
+
+        // Card formatting & validation helpers
+        function luhnCheck(cardNum) {
+            let sum = 0;
+            let alternate = false;
+            for (let i = cardNum.length - 1; i >= 0; i--) {
+                let n = parseInt(cardNum.charAt(i), 10);
+                if (alternate) n *= 2;
+                if (n > 9) n = (n % 10) + 1;
+                sum += n;
+                alternate = !alternate;
+            }
+            return sum % 10 === 0;
+        }
+        function validateCardNumber(num) {
+            const digits = num.replace(/\s/g, '');
+            if (!/^\d{16}$/.test(digits)) return false;
+            return luhnCheck(digits);
+        }
+        function validateExpiry(expiry) {
+            const match = expiry.match(/^(0[1-9]|1[0-2])\/(\d{2})$/);
+            if (!match) return false;
+            const month = parseInt(match[1], 10);
+            const year = parseInt('20' + match[2], 10);
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const currentMonth = now.getMonth() + 1;
+            if (year < currentYear) return false;
+            if (year === currentYear && month < currentMonth) return false;
+            return true;
+        }
+        function validateCVV(cvv) { return /^\d{3,4}$/.test(cvv); }
+
+        // Format inputs
+        document.getElementById('cardNumber').addEventListener('input', function(e) {
+            let val = e.target.value.replace(/\D/g, '');
+            if (val.length > 16) val = val.slice(0,16);
+            e.target.value = val.replace(/(\d{4})/g, '$1 ').trim();
+        });
+        document.getElementById('expiry').addEventListener('input', function(e) {
+            let val = e.target.value.replace(/\D/g, '');
+            if (val.length >= 2) val = val.slice(0,2) + '/' + val.slice(2,4);
+            e.target.value = val;
+        });
+
+        // Dedication toggle
+        const dedicateCheck = document.getElementById('dedicate');
+        const dedicateFields = document.getElementById('dedicateFields');
+        dedicateCheck.addEventListener('change', () => {
+            dedicateFields.style.display = dedicateCheck.checked ? 'block' : 'none';
+        });
+
+        // Form submission
+        const donationForm = document.getElementById('donationForm');
+        donationForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            // Clear previous errors
+            document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+            
+            // Gather data
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const amount = selectedAmount || customAmount.value;
+            const cardNumberRaw = document.getElementById('cardNumber').value.replace(/\s/g, '');
+            const expiry = document.getElementById('expiry').value;
+            const cvv = document.getElementById('cvv').value;
+            const frequency = document.querySelector('input[name="frequency"]:checked').value;
+            const dedication = dedicateCheck.checked;
+            const honorName = document.getElementById('honorName')?.value || '';
+            const notificationEmail = document.getElementById('notificationEmail')?.value || '';
+
+            let isValid = true;
+            if (!firstName || !lastName || !email) { alert('Please fill in all required fields.'); isValid = false; }
+            if (!amount || amount <= 0) { document.getElementById('amountError').style.display = 'block'; isValid = false; }
+            if (!validateCardNumber(cardNumberRaw)) { document.getElementById('cardError').style.display = 'block'; isValid = false; }
+            if (!validateExpiry(expiry)) { document.getElementById('expiryError').style.display = 'block'; isValid = false; }
+            if (!validateCVV(cvv)) { document.getElementById('cvvError').style.display = 'block'; isValid = false; }
+            if (!isValid) return;
+
+            // Prepare payload
+            const payload = {
+                firstName, lastName, email, phone, amount: parseFloat(amount),
+                cardNumber: cardNumberRaw, cardExpiry: expiry, cardCvv: cvv, frequency,
+                dedication, honorName, notificationEmail
+            };
+
+            // UI processing state
+            const submitBtn = donationForm.querySelector('.submit-donation');
+            const processingDiv = document.getElementById('processingMsg');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Processing...';
+            processingDiv.style.display = 'block';
+
+            try {
+                const response = await fetch('/api/donate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    // Store info for Payment.html
+                    sessionStorage.setItem('donationAmount', amount);
+                    sessionStorage.setItem('donorName', `${firstName} ${lastName}`);
+                    sessionStorage.setItem('donationEmail', email);
+                    sessionStorage.setItem('donationId', result.donationId || 'TXN' + Date.now());
+                    window.location.href = '/Payment.html';
+                } else {
+                    alert('Donation failed: ' + (result.message || 'Please try again.'));
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Complete Donation';
+                    processingDiv.style.display = 'none';
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Network error. Please check your connection.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Complete Donation';
+                processingDiv.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
